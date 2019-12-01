@@ -4,6 +4,7 @@ import {createMainFilmsTemplate} from './components/main-films.js';
 import {createMainMenuTemplate} from './components/main-menu.js';
 import {createProfileRatingTemplate} from './components/profile-rating.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
+import {generateFilmCards} from './mock/film-card.js';
 
 const MOVIE_CARD_COUNT = 5;
 const MOVIE_CARD_EXTRA_COUNT = 2;
@@ -20,8 +21,9 @@ render(siteMainElement, createMainMenuTemplate(), `beforeend`);
 render(siteMainElement, createMainFilmsTemplate(), `beforeend`);
 
 const filmsListContainer = siteMainElement.querySelector(`.films-list .films-list__container`);
-for (let i = 0; i < MOVIE_CARD_COUNT; i++) {
-  render(filmsListContainer, createFilmCardTemplate(), `beforeend`);
+const films = generateFilmCards(MOVIE_CARD_COUNT);
+for (let film of films) {
+  render(filmsListContainer, createFilmCardTemplate(film), `beforeend`);
 }
 
 const filmsList = siteMainElement.querySelector(`.films-list`);
@@ -29,8 +31,9 @@ render(filmsList, createShowMoreButtonTemplate(), `beforeend`);
 
 const filmsListExtraContainer = siteMainElement.querySelectorAll(`.films-list--extra .films-list__container`);
 filmsListExtraContainer.forEach((el) => {
-  for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
-    render(el, createFilmCardTemplate(), `beforeend`);
+  const extraFilms = generateFilmCards(MOVIE_CARD_EXTRA_COUNT);
+  for (let film of extraFilms) {
+    render(el, createFilmCardTemplate(film), `beforeend`);
   }
 });
 
