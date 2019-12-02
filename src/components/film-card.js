@@ -1,11 +1,24 @@
 export const createFilmCardTemplate = (film) => {
 
-  const {title, rating, year, duration, genre, poster, description, comments} = film;
+  const MAX_LENGTH_DESCRIPTION = 140;
+
+  const {title, rating, year, duration, genres, poster, description, comments} = film;
   const commentsCount = comments.length;
+
+  const getShortText = (text, length) => {
+    if (text.length > length) {
+      return text.substr(0, length - 1) + `...`;
+    }
+
+    return text;
+  };
+
+  const shortDescription = getShortText(description, MAX_LENGTH_DESCRIPTION);
+  const genre = genres[0];
 
   return (
     `<article class="film-card">
-      <h3 class="film-card__title">${title}</h3>
+      <h3 class="film-card__title">${title[`title`]}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${year}</span>
@@ -13,7 +26,7 @@ export const createFilmCardTemplate = (film) => {
         <span class="film-card__genre">${genre}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${shortDescription}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>

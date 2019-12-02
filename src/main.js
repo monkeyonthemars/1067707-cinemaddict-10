@@ -4,7 +4,7 @@ import {createMainFilmsTemplate} from './components/main-films.js';
 import {createMainMenuTemplate} from './components/main-menu.js';
 import {createProfileRatingTemplate} from './components/profile-rating.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
-import {generateFilmCards} from './mock/film-card.js';
+import {generateFilmCards} from './mock/film.js';
 
 const MOVIE_CARD_COUNT = 5;
 const MOVIE_CARD_EXTRA_COUNT = 2;
@@ -38,4 +38,4 @@ filmsListExtraContainer.forEach((el) => {
 });
 
 const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createFilmDetailsTemplate(), `afterend`);
+render(siteFooterElement, createFilmDetailsTemplate(films[0]), `afterend`);
