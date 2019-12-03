@@ -1,14 +1,23 @@
-export const createMainMenuTemplate = () => {
+export const createMainMenuTemplate = (menu) => {
+
+  const {siteMenu, sortMenu} = menu;
+
+  let siteMenuList = ``;
+  for (let item of siteMenu) {
+    siteMenuList = siteMenuList +
+    `<a href="#" class="main-navigation__item">${item} <span class="main-navigation__item-count"></span></a>`;
+  }
+
+  let sortMenuList = ``;
+  for (let item of sortMenu) {
+    sortMenuList = sortMenuList +
+    `<li><a href="#" class="sort__button">${item}</a></li>`;
+  }
+
   return `<nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count"></span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count"></span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count"></span></a>
-    <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
-  </nav>
-  <ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`;
+      ${siteMenuList}
+    </nav>
+    <ul class="sort">
+      ${sortMenuList}
+    </ul>`;
 };

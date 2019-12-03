@@ -2,8 +2,7 @@ export const createFilmCardTemplate = (film) => {
 
   const MAX_LENGTH_DESCRIPTION = 140;
 
-  const {title, rating, year, duration, genres, poster, description, comments} = film;
-  const commentsCount = comments.length;
+  const {title, rating, year, duration, genres, poster, description, commentsCount} = film;
 
   const getShortText = (text, length) => {
     if (text.length > length) {
@@ -14,7 +13,7 @@ export const createFilmCardTemplate = (film) => {
   };
 
   const shortDescription = getShortText(description, MAX_LENGTH_DESCRIPTION);
-  const genre = genres[0];
+  const genre = genres[0]; // TODO
 
   return (
     `<article class="film-card">

@@ -1,13 +1,11 @@
+import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../components/util.js';
+
 const MIN_YEAR = 1980;
 const MAX_YEAR = 2019;
 const MIN_RATING = 1;
 const MAX_RATING = 9;
 const MIN_DESCRIPTION_SENTENCE = 1;
 const MAX_DESCRIPTION_SENTENCE = 3;
-const MIN_COMMENT_SENTENCE = 1;
-const MAX_COMMENT_SENTENCE = 4;
-const MIN_COMMENT_COUNT = 1;
-const MAX_COMMENT_COUNT = 20;
 const MIN_GENRE_COUNT = 3;
 const MAX_GENRE_COUNT = 5;
 const MIN_DIRECTOR_COUNT = 1;
@@ -20,8 +18,7 @@ const MIN_DURATION = 40;
 const MAX_DURATION = 180;
 const POSTERS_PATH = `./images/posters/`;
 
-
-const Titles = [
+const TITLES = [
   {title: `Баллада Бастера Скраггса`,
     originalTitle: `The Ballad of Buster Scruggs`},
   {title: `Да здравствует Цезарь!`,
@@ -54,7 +51,7 @@ const Titles = [
     originalTitle: `The Hudsucker Proxy`}
 ];
 
-const Genres = [
+const GENRES = [
   `Comedy`,
   `Crime`,
   `Drama`,
@@ -63,7 +60,7 @@ const Genres = [
   `Fantasy`
 ];
 
-const Posters = [`popeye-meets-sinbad.png`,
+const POSTERS = [`popeye-meets-sinbad.png`,
   `popeye-meets-sinbad.png`,
   `sagebrush-trail.jpg`,
   `santa-claus-conquers-the-martians.jpg`,
@@ -72,14 +69,14 @@ const Posters = [`popeye-meets-sinbad.png`,
   `the-man-with-the-golden-arm.jpg`
 ];
 
-const Directors = [`Стивен Спилберг`,
+const DIRECTORS = [`Стивен Спилберг`,
   `Джородж Лукас`,
   `Мартин Скорсезе`,
   `Вуди Аллен`,
   `Квентин Тарантино`
 ];
 
-const Writers = [`Билли Уайлдер`,
+const WRITERS = [`Билли Уайлдер`,
   `Итан Коэн`,
   `Джоэл Коэн`,
   `Роберт Таун`,
@@ -87,7 +84,7 @@ const Writers = [`Билли Уайлдер`,
   `Аарон Соркин`
 ];
 
-const Actors = [
+const ACTORS = [
   `Джонни Депп`,
   `Брэд Питт`,
   `Леонардо ДиКаприо`,
@@ -110,7 +107,7 @@ const Actors = [
   `Оуэн Уилсон`
 ];
 
-const FilmRatings = [
+const FILMRATINGS = [
   `G`,
   `PG`,
   `PG-13`,
@@ -118,46 +115,15 @@ const FilmRatings = [
   `NC-17`
 ];
 
-const Сountries = [
+const COUNTRIES = [
   `USA`,
   `Russia`,
   `Germany`,
   `India`
 ];
 
-const RandomSentences = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
-    .split(`. `);
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor((max - min) * Math.random());
-};
-
 const getRandomFloatNumber = (min, max) => {
   return (min + (max - min) * Math.random()).toFixed(1);
-};
-
-const generateText = (sentences, min, max) => {
-  return sentences
-  .filter(() => Math.random() > 0.5)
-  .slice(0, getRandomIntegerNumber(min, max))
-  .join(`. `) + `.`;
-};
-
-const generateComments = (min, max) => {
-  let comments = [];
-  const commentsCount = getRandomIntegerNumber(min, max);
-  for (let i = 0; i < commentsCount; i++) {
-    comments.push(generateText(
-        RandomSentences, MIN_COMMENT_SENTENCE, MAX_COMMENT_SENTENCE));
-  }
-
-  return comments;
 };
 
 const generateDuration = (min, max) => {
@@ -178,26 +144,26 @@ const genarateArray = (arr, min, max) => {
 
 const generateFilmCard = () => {
   return {
-    title: getRandomArrayItem(Titles),
+    title: getRandomArrayItem(TITLES),
     rating: getRandomFloatNumber(MIN_RATING, MAX_RATING),
     year: getRandomIntegerNumber(MIN_YEAR, MAX_YEAR),
     duration: generateDuration(MIN_DURATION, MAX_DURATION),
-    genres: genarateArray(Genres, MIN_GENRE_COUNT, MAX_GENRE_COUNT),
-    poster: POSTERS_PATH + getRandomArrayItem(Posters),
+    genres: genarateArray(GENRES, MIN_GENRE_COUNT, MAX_GENRE_COUNT),
+    poster: POSTERS_PATH + getRandomArrayItem(POSTERS),
     description: generateText(
-        RandomSentences, MIN_DESCRIPTION_SENTENCE, MAX_DESCRIPTION_SENTENCE),
-    comments: generateComments(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT),
+        getRandomSentences(), MIN_DESCRIPTION_SENTENCE, MAX_DESCRIPTION_SENTENCE),
     userRate: getRandomFloatNumber(MIN_RATING, MAX_RATING),
-    director: genarateArray(Directors, MIN_DIRECTOR_COUNT, MAX_DIRECTOR_COUNT),
+    director: genarateArray(DIRECTORS, MIN_DIRECTOR_COUNT, MAX_DIRECTOR_COUNT),
     writer: genarateArray(
-        Writers, MIN_SCREENWRITER_COUNT, MAX_SCREENWRITER_COUNT),
-    actors: genarateArray(Actors, MIN_ACTOR_COUNT, MAX_ACTOR_COUNT),
+        WRITERS, MIN_SCREENWRITER_COUNT, MAX_SCREENWRITER_COUNT),
+    actors: genarateArray(ACTORS, MIN_ACTOR_COUNT, MAX_ACTOR_COUNT),
     releaseDate: new Date(
         getRandomIntegerNumber(1930, 2019),
         getRandomIntegerNumber(1, 12),
         getRandomIntegerNumber(1, 31)),
-    filmRating: getRandomArrayItem(FilmRatings),
-    country: getRandomArrayItem(Сountries)
+    filmRating: getRandomArrayItem(FILMRATINGS),
+    country: getRandomArrayItem(COUNTRIES),
+    commentsCount: getRandomIntegerNumber(0, 50)
   };
 };
 
@@ -207,4 +173,4 @@ const generateFilmCards = (count) => {
     .map(generateFilmCard);
 };
 
-export {generateFilmCard, generateFilmCards};
+export {generateFilmCards};
