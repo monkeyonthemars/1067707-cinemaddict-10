@@ -16,6 +16,8 @@ const MIN_ACTOR_COUNT = 3;
 const MAX_ACTOR_COUNT = 10;
 const MIN_DURATION = 40;
 const MAX_DURATION = 180;
+const MIX_RELEASE_DATE = 1930;
+const MAX_RELEASE_DATE = 2019;
 const POSTERS_PATH = `./images/posters/`;
 
 const TITLES = [
@@ -158,7 +160,7 @@ const generateFilmCard = () => {
         WRITERS, MIN_SCREENWRITER_COUNT, MAX_SCREENWRITER_COUNT),
     actors: genarateArray(ACTORS, MIN_ACTOR_COUNT, MAX_ACTOR_COUNT),
     releaseDate: new Date(
-        getRandomIntegerNumber(1930, 2019),
+        getRandomIntegerNumber(MIX_RELEASE_DATE, MAX_RELEASE_DATE),
         getRandomIntegerNumber(1, 12),
         getRandomIntegerNumber(1, 31)),
     filmRating: getRandomArrayItem(FILMRATINGS),

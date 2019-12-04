@@ -37,9 +37,10 @@ render(filmsList, createShowMoreButtonTemplate(), `beforeend`);
 const showMoreButtonElement = document.querySelector(`.films-list__show-more`);
 
 const renderMoviesBlock = () => {
-  for (let film of films.slice(startMoviesBlock, endMoviesBlock)) {
-    render(filmsListContainer, createFilmCardTemplate(film), `beforeend`);
-  }
+  films
+    .slice(startMoviesBlock, endMoviesBlock)
+    .forEach((film) => render(filmsListContainer, createFilmCardTemplate(film), `beforeend`));
+
   startMoviesBlock = endMoviesBlock;
   endMoviesBlock += MOVIE_CARD_SHOW_COUNT;
 
@@ -62,13 +63,13 @@ const getSotredArray = (arr, sortField) => {
   }).slice(0, MAX_SORTED_FILMS);
 };
 
-for (let film of getSotredArray(films, `rating`)) {
-  render(filmsListExtraContainer[0], createFilmCardTemplate(film), `beforeend`); // TODO [0]
-}
+// TODO переделать обращение к элементу по индексу
+getSotredArray(films, `rating`)
+  .forEach((film) => render(filmsListExtraContainer[0], createFilmCardTemplate(film), `beforeend`));
 
-for (let film of getSotredArray(films, `commentsCount`)) {
-  render(filmsListExtraContainer[1], createFilmCardTemplate(film), `beforeend`); // TODO [1]
-}
+// TODO переделать обращение к элементу по индексу
+getSotredArray(films, `commentsCount`)
+  .forEach((film) => render(filmsListExtraContainer[1], createFilmCardTemplate(film), `beforeend`));
 
 const siteFooterElement = document.querySelector(`.footer`);
 render(siteFooterElement, createFilmDetailsTemplate(films[0], generateComments()), `afterend`);

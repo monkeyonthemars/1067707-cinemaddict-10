@@ -1,6 +1,6 @@
-export const createFilmCardTemplate = (film) => {
+const MAX_LENGTH_DESCRIPTION = 140;
 
-  const MAX_LENGTH_DESCRIPTION = 140;
+export const createFilmCardTemplate = (film) => {
 
   const {title, rating, year, duration, genres, poster, description, commentsCount} = film;
 
@@ -13,7 +13,7 @@ export const createFilmCardTemplate = (film) => {
   };
 
   const shortDescription = getShortText(description, MAX_LENGTH_DESCRIPTION);
-  const genre = genres[0]; // TODO
+  const genre = genres.shift();
 
   return (
     `<article class="film-card">

@@ -1,3 +1,33 @@
+const generateCommentsList = (comments) => {
+  return comments
+    .map((comment) => {
+
+      const {emoji, text, author, date} = comment;
+
+      return (`<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="${emoji}" width="55" height="55" alt="emoji">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${author}</span>
+            <span class="film-details__comment-day">${date}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`
+      );
+    }).join(`\n`);
+};
+
+const generateGenresList = (genres) => {
+  return genres
+    .map((genre) => {
+      return (`<span class="film-details__genre">${genre}</span>`);
+    }).join(`\n`);
+};
+
 export const createFilmDetailsTemplate = (film, comments) => {
   const {
     title,
@@ -14,29 +44,8 @@ export const createFilmDetailsTemplate = (film, comments) => {
     country
   } = film;
 
-  let commentsList = ``;
-  for (let comment of comments) {
-    const {emoji, text, author, date} = comment;
-
-    commentsList += `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="${emoji}" width="55" height="55" alt="emoji">
-      </span>
-      <div>
-        <p class="film-details__comment-text">${text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${date}</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`;
-  }
-
-  let genresList = ``;
-  for (let genre of genres) {
-    genresList += `<span class="film-details__genre">${genre}</span>`;
-  }
+  const commentsList = generateCommentsList(comments);
+  const genresList = generateGenresList(genres);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
