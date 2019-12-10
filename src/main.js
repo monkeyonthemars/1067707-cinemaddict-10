@@ -1,45 +1,43 @@
-import {createFilmCardTemplate} from './components/film-card.js';
-import {createFilmDetailsTemplate} from './components/film-details.js';
-import {createMainFilmsTemplate} from './components/main-films.js';
-import {createMainMenuTemplate} from './components/main-menu.js';
-import {createProfileRatingTemplate} from './components/profile-rating.js';
-import {createShowMoreButtonTemplate} from './components/show-more-button.js';
+import FilmCardComponent from './components/film-card.js';
+import FilmDetailsComponent from './components/film-details.js';
+import MainFilmsComponent from './components/main-films.js';
+import MainMenuComponent from './components/main-menu.js';
+import ProfileRatingComponent from './components/profile-rating.js';
+import ShowMoreButtonComponent from './components/show-more-button.js';
+
 import {generateFilmCards} from './mock/film.js';
 import {generateUserInfo} from './mock/user.js';
 import {generateSiteMenu, generateSortMenu} from './mock/menu.js';
 import {generateComments} from './mock/comments.js';
 
+import {RenderPosition, render} from './render.js';
+
 const MOVIE_CARD_COUNT = 10;
 const MOVIE_CARD_SHOW_COUNT = 5;
 const MAX_SORTED_FILMS = 2;
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const siteHeaderElement = document.querySelector(`.header`);
-const userInfo = generateUserInfo();
-render(siteHeaderElement, createProfileRatingTemplate(userInfo), `beforeend`);
+render(siteHeaderElement, new ProfileRatingComponent(generateUserInfo()), RenderPosition.BEFOREEND);
 
 const siteMainElement = document.querySelector(`.main`);
 const menu = {
   siteMenu: generateSiteMenu(),
   sortMenu: generateSortMenu()
 };
-render(siteMainElement, createMainMenuTemplate(menu), `beforeend`);
-render(siteMainElement, createMainFilmsTemplate(), `beforeend`);
+render(siteMainElement, new MainMenuComponent(menu), RenderPosition.BEFOREEND);
+render(siteMainElement, new MainFilmsComponent(), RenderPosition.BEFOREEND);
 
 let startMoviesBlock = 0;
 let endMoviesBlock = MOVIE_CARD_SHOW_COUNT;
 
 const filmsList = siteMainElement.querySelector(`.films-list`);
-render(filmsList, createShowMoreButtonTemplate(), `beforeend`);
+render(filmsList, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
 const showMoreButtonElement = document.querySelector(`.films-list__show-more`);
 
 const renderMoviesBlock = () => {
   films
     .slice(startMoviesBlock, endMoviesBlock)
-    .forEach((film) => render(filmsListContainer, createFilmCardTemplate(film), `beforeend`));
+    .forEach((film) => render(filmsListContainer, new FilmCardComponent(film), RenderPosition.BEFOREEND));
 
   startMoviesBlock = endMoviesBlock;
   endMoviesBlock += MOVIE_CARD_SHOW_COUNT;
@@ -65,11 +63,11 @@ const getSotredArray = (arr, sortField) => {
 
 // TODO переделать обращение к элементу по индексу
 getSotredArray(films, `rating`)
-  .forEach((film) => render(filmsListExtraContainer[0], createFilmCardTemplate(film), `beforeend`));
+  .forEach((film) => render(filmsListExtraContainer[0], new FilmCardComponent(film), RenderPosition.BEFOREEND));
 
 // TODO переделать обращение к элементу по индексу
 getSotredArray(films, `commentsCount`)
-  .forEach((film) => render(filmsListExtraContainer[1], createFilmCardTemplate(film), `beforeend`));
+  .forEach((film) => render(filmsListExtraContainer[1], new FilmCardComponent(film), RenderPosition.BEFOREEND));
 
-const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createFilmDetailsTemplate(films[0], generateComments()), `afterend`);
+const siteBodyElement = document.querySelector(`body`);
+render(siteBodyElement, new FilmDetailsComponent(films[0], generateComments()), RenderPosition.BEFOREEND);
