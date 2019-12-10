@@ -4,7 +4,7 @@ const createShowMoreButtonTemplate = () => {
   return `<button class="films-list__show-more">Show more</button>`;
 };
 
-export default class FilmCard {
+export default class ShowMoreButton {
   constructor() {
     this._element = null;
   }

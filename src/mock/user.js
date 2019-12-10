@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from '../components/util.js';
+import {getRandomIntegerNumber} from '../utils.js';
 
 const MIN_USER_RATE = 0;
 const MAX_USER_RATE = 30;

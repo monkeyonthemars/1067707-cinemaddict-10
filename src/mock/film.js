@@ -1,5 +1,4 @@
-import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../components/util.js';
-
+import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../utils.js';
 const MIN_YEAR = 1980;
 const MAX_YEAR = 2019;
 const MIN_RATING = 1;
