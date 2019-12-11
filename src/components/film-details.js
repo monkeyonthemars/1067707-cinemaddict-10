@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const generateCommentsList = (comments) => {
   return comments
     .map((comment) => {
@@ -28,7 +30,7 @@ const generateGenresList = (genres) => {
     }).join(`\n`);
 };
 
-export const createFilmDetailsTemplate = (film, comments) => {
+const createFilmDetailsTemplate = (film, comments) => {
   const {
     title,
     rating,
@@ -165,3 +167,27 @@ export const createFilmDetailsTemplate = (film, comments) => {
     </form>
   </section>`;
 };
+
+export default class FilmDetails {
+  constructor(film, comments) {
+    this._element = null;
+    this._film = film;
+    this._comments = comments;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film, this._comments);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

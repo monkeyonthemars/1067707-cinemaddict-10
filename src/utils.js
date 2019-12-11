@@ -20,4 +20,11 @@ const getRandomSentences = () => {
     .split(`. `);
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences, createElement};

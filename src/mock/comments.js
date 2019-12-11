@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../components/util.js';
+import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../utils.js';
 
 const MIN_COMMENT_SENTENCE = 1;
 const MAX_COMMENT_SENTENCE = 4;

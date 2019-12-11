@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const generateSiteMenuList = (siteMenu) => {
   return siteMenu
     .map((item) => {
@@ -14,7 +16,7 @@ const generateSortMenuList = (sortMenu) => {
     }).join(`\n`);
 };
 
-export const createMainMenuTemplate = (menu) => {
+const createMainMenuTemplate = (menu) => {
 
   const {siteMenu, sortMenu} = menu;
   const siteMenuList = generateSiteMenuList(siteMenu);
@@ -27,3 +29,26 @@ export const createMainMenuTemplate = (menu) => {
       ${sortMenuList}
     </ul>`;
 };
+
+export default class MainMenu {
+  constructor(menu) {
+    this._element = null;
+    this._menu = menu;
+  }
+
+  getTemplate() {
+    return createMainMenuTemplate(this._menu);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
