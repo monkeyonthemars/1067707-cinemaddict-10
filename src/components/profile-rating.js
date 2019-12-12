@@ -1,5 +1,6 @@
 import {createElement} from '../utils.js';
 
+// TODO на реальном сервере другая структура пользователя
 const createProfileRatingTemplate = (user) => {
 
   const {rating} = user;

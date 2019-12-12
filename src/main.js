@@ -1,6 +1,6 @@
 import FilmCardComponent from './components/film-card.js';
 import FilmDetailsComponent from './components/film-details.js';
-import MainFilmsComponent from './components/main-films.js';
+import FilmListComponent from './components/film-list.js';
 import MainMenuComponent from './components/main-menu.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import ShowMoreButtonComponent from './components/show-more-button.js';
@@ -25,7 +25,7 @@ const menu = {
   sortMenu: generateSortMenu()
 };
 render(siteMainElement, new MainMenuComponent(menu), RenderPosition.BEFOREEND);
-render(siteMainElement, new MainFilmsComponent(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilmListComponent(), RenderPosition.BEFOREEND);
 
 let startMoviesBlock = 0;
 let endMoviesBlock = MOVIE_CARD_SHOW_COUNT;
