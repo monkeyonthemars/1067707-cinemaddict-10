@@ -14,4 +14,16 @@ const render = (container, component, place) => {
   }
 };
 
-export {RenderPosition, render};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
+export {RenderPosition, render, createElement, remove};

@@ -1,5 +1,6 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
+// TODO на реальном сервере другая структура пользователя
 const createProfileRatingTemplate = (user) => {
 
   const {rating} = user;
@@ -10,25 +11,13 @@ const createProfileRatingTemplate = (user) => {
   </section>`;
 };
 
-export default class ProfileRating {
+export default class ProfileRating extends AbstractComponent {
   constructor(user) {
-    this._element = null;
+    super();
     this._user = user;
   }
 
   getTemplate() {
     return createProfileRatingTemplate(this._user);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

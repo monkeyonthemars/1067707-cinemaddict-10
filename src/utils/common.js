@@ -20,11 +20,10 @@ const getRandomSentences = () => {
     .split(`. `);
 };
 
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
+const getSotredArray = (arr, sortField, count) => {
+  return arr.slice().sort(function (first, second) {
+    return second[sortField] - first[sortField];
+  }).slice(0, count);
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences, createElement};
+export {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences, getSotredArray};
