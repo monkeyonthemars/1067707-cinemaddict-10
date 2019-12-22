@@ -1,4 +1,6 @@
-import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../utils/common.js';
+import {getRandomIntegerNumber, getRandomArrayItem, generateRandomText} from '../utils/random.js';
+import {getSentences} from '../utils/mock.js';
+
 const MIN_YEAR = 1980;
 const MAX_YEAR = 2019;
 const MIN_RATING = 1;
@@ -146,13 +148,13 @@ const genarateArray = (arr, min, max) => {
 const generateFilmCard = () => {
   return {
     title: getRandomArrayItem(TITLES),
-    rating: getRandomFloatNumber(MIN_RATING, MAX_RATING),
+    rating: getRandomIntegerNumber(MIN_RATING, MAX_RATING),
     year: getRandomIntegerNumber(MIN_YEAR, MAX_YEAR),
     duration: generateDuration(MIN_DURATION, MAX_DURATION),
     genres: genarateArray(GENRES, MIN_GENRE_COUNT, MAX_GENRE_COUNT),
     poster: POSTERS_PATH + getRandomArrayItem(POSTERS),
-    description: generateText(
-        getRandomSentences(), MIN_DESCRIPTION_SENTENCE, MAX_DESCRIPTION_SENTENCE),
+    description: generateRandomText(
+        getSentences(), MIN_DESCRIPTION_SENTENCE, MAX_DESCRIPTION_SENTENCE),
     userRate: getRandomFloatNumber(MIN_RATING, MAX_RATING),
     director: genarateArray(DIRECTORS, MIN_DIRECTOR_COUNT, MAX_DIRECTOR_COUNT),
     writer: genarateArray(
@@ -164,7 +166,10 @@ const generateFilmCard = () => {
         getRandomIntegerNumber(1, 31)),
     filmRating: getRandomArrayItem(FILMRATINGS),
     country: getRandomArrayItem(COUNTRIES),
-    commentsCount: getRandomIntegerNumber(0, 50)
+    commentsCount: getRandomIntegerNumber(0, 50),
+    isWatchlist: true,
+    isWatched: true,
+    isFavorite: true
   };
 };
 

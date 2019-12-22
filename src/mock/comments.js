@@ -1,4 +1,5 @@
-import {getRandomIntegerNumber, getRandomArrayItem, generateText, getRandomSentences} from '../utils/common.js';
+import {getRandomIntegerNumber, getRandomArrayItem, generateRandomText} from '../utils/random.js';
+import {getSentences} from '../utils/mock.js';
 
 const MIN_COMMENT_SENTENCE = 1;
 const MAX_COMMENT_SENTENCE = 4;
@@ -32,7 +33,7 @@ const getRandomDate = () => {
 const generateComment = (min, max) => {
   return {
     author: getRandomArrayItem(AUTHORS),
-    text: generateText(getRandomSentences(), min, max),
+    text: generateRandomText(getSentences(), min, max),
     emoji: getRandomArrayItem(EMOJI),
     date: getRandomDate()
   };
