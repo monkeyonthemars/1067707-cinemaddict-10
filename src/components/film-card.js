@@ -55,8 +55,7 @@ export default class FilmCard extends AbstractComponent {
 
   setDetailButtonClickHandler(handler) {
     this.getElement()
-      .querySelectorAll(`.film-card__poster`)
-      .forEach((element) => element.addEventListener(`click`, handler));
+      .querySelector(`.film-card__poster`).addEventListener(`click`, handler);
   }
 
   setWatchlistButtonClickHandler(handler) {

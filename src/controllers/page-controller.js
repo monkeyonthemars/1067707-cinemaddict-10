@@ -86,9 +86,9 @@ export default class PageController {
     this._showedFilmsControllers = [];
   }
 
-  _onDataChange(oldFilm, newFilm) {
+  _onDataChange(oldFilmId, newFilm) {
     this._films.splice(
-        this._films.findIndex((film) => film === oldFilm),
+        this._films.findIndex((film) => film.id === oldFilmId),
         1,
         newFilm);
     this._removeFilms();

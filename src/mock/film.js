@@ -145,8 +145,11 @@ const genarateArray = (arr, min, max) => {
   .slice(0, getRandomIntegerNumber(min, max));
 };
 
+let filmId = 0;
+
 const generateFilmCard = () => {
   return {
+    id: (filmId += 1),
     title: getRandomArrayItem(TITLES),
     rating: getRandomIntegerNumber(MIN_RATING, MAX_RATING),
     year: getRandomIntegerNumber(MIN_YEAR, MAX_YEAR),
