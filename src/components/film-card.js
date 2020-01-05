@@ -1,10 +1,12 @@
 import AbstractComponent from './abstract-component.js';
 
 const MAX_LENGTH_DESCRIPTION = 140;
+const FILM_CARD_CONTROLS_ITEM_ACTIVE = ` film-card__controls-item--active`;
 
 const createFilmCardTemplate = (film) => {
 
-  const {title, rating, year, duration, genres, poster, description, commentsCount} = film;
+  const {title, rating, year, duration, genres, poster, description,
+    commentsCount, isWatchlist, isWatched, isFavorite} = film;
 
   const getShortText = (text, length) => {
     if (text.length > length) {
@@ -15,7 +17,10 @@ const createFilmCardTemplate = (film) => {
   };
 
   const shortDescription = getShortText(description, MAX_LENGTH_DESCRIPTION);
-  const genre = genres.shift();
+  const genre = genres[0];
+  const watchlist = isWatchlist ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
+  const watched = isWatched ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
+  const favorite = isFavorite ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
 
   return (
     `<article class="film-card">
@@ -30,9 +35,9 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__description">${shortDescription}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${watchlist}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${watched}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite${favorite}">Mark as favorite</button>
       </form>
     </article>`
   );
@@ -46,5 +51,34 @@ export default class FilmCard extends AbstractComponent {
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
+  }
+
+  setDetailButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+  }
+
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
+  }
+
+  setWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
+  }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
   }
 }
