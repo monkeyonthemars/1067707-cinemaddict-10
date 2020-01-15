@@ -9,6 +9,7 @@ import {generateSiteMenu, generateSortMenu} from './mock/menu.js';
 import PageController from './controllers/page-controller.js';
 
 import {RenderPosition, render} from './utils/render.js';
+import MoviesModel from './models/movies.js';
 
 const FILMS_CARD_COUNT = 8;
 
@@ -26,6 +27,6 @@ const menu = {
 render(siteMainElement, new MainMenuComponent(menu), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilmListComponent(), RenderPosition.BEFOREEND);
 
-new PageController(siteMainElement.querySelector(`.films`)).render(
-    generateFilmCards(FILMS_CARD_COUNT)
-);
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(generateFilmCards(FILMS_CARD_COUNT));
+new PageController(siteMainElement.querySelector(`.films`), moviesModel).render();

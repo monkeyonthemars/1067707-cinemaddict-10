@@ -9,12 +9,13 @@ const FILMS_COUNT_IN_BLOCK = 5;
 const MAX_SORTED_FILMS = 2;
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
+    this._moviesModel = moviesModel;
     this._filmsListContainer = this._container.querySelector(`.films-list .films-list__container`);
     this._filmsListExtraContainer = this._container.querySelectorAll(`.films-list--extra .films-list__container`);
 
-    this._films = null;
+    this._films = this._moviesModel.getMovies();
     this._startBlock = 0;
     this._endBlock = FILMS_COUNT_IN_BLOCK;
 
@@ -27,8 +28,7 @@ export default class PageController {
     this._showedFilmsControllers = [];
   }
 
-  render(films) {
-    this._films = films;
+  render() {
 
     render(
         this._container.querySelector(`.films-list`),
