@@ -1,25 +1,31 @@
 import AbstractComponent from './abstract-component.js';
+import {generateSortMenu} from '../mock/menu.js';
 
-const generateSiteMenuList = (siteMenu) => {
-  return siteMenu
+const generateSiteMenuList = (data) => {
+  return data
     .map((item) => {
-      return (`<a href="#" class="main-navigation__item">${item} <span class="main-navigation__item-count"></span></a>`
+      return (
+        `<a href="#${item.link}" class="main-navigation__item
+        ${item.isActive ? ` main-navigation__item--active` : ``}">
+        ${item.title}${item.count === `` ? `` : `
+        <span class="main-navigation__item-count">${item.count}</span>`}</a>`
       );
     }).join(`\n`);
 };
 
-const generateSortMenuList = (sortMenu) => {
-  return sortMenu
+const generateSortMenuList = (data) => {
+  return data
     .map((item) => {
       return (`<li><a href="#" class="sort__button">${item}</a></li>`
       );
     }).join(`\n`);
 };
 
-const createMainMenuTemplate = (menu) => {
+const createMainMenuTemplate = (data) => {
 
-  const {siteMenu, sortMenu} = menu;
-  const siteMenuList = generateSiteMenuList(siteMenu);
+  let sortMenu = generateSortMenu();
+
+  const siteMenuList = generateSiteMenuList(data);
   const sortMenuList = generateSortMenuList(sortMenu);
 
   return `<nav class="main-navigation">
@@ -39,4 +45,12 @@ export default class MainMenu extends AbstractComponent {
   getTemplate() {
     return createMainMenuTemplate(this._menu);
   }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      const filterName = evt.target.hash.slice(1);
+      handler(filterName);
+    });
+  }
+
 }

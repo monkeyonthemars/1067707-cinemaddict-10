@@ -23,9 +23,12 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._renderFilmsBlock = this._renderFilmsBlock.bind(this);
 
     this._showedFilmsControllers = [];
+
+    this._moviesModel.onFilterChange(this._onFilterChange);
   }
 
   render() {
@@ -93,9 +96,16 @@ export default class PageController {
         newFilm);
     this._removeFilms();
     this.render(this._films);
+    this._onFilterChange();
   }
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((filmController) => filmController.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._films = this._moviesModel.getMovies();
+    this._removeFilms();
+    this.render();
   }
 }

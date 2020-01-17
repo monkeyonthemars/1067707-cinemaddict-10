@@ -170,9 +170,9 @@ const generateFilmCard = () => {
     filmRating: getRandomArrayItem(FILMRATINGS),
     country: getRandomArrayItem(COUNTRIES),
     commentsCount: getRandomIntegerNumber(0, 50),
-    isWatchlist: true,
-    isWatched: true,
-    isFavorite: true
+    isWatchlist: Math.random() > 0.5,
+    isHistory: Math.random() > 0.5,
+    isFavorites: Math.random() > 0.5
   };
 };
 

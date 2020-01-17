@@ -63,13 +63,13 @@ export default class MovieController {
 
     this._filmComponent.setWatchedButtonClickHandler(() => {
       this._onDataChange(film.id, Object.assign({}, film, {
-        isWatched: !film.isWatched,
+        isHistory: !film.isHistory,
       }));
     });
 
     this._filmComponent.setFavoritesButtonClickHandler(() => {
       this._onDataChange(film.id, Object.assign({}, film, {
-        isFavorite: !film.isFavorite,
+        isFavorites: !film.isFavorites,
       }));
     });
 
