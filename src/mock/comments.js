@@ -30,10 +30,10 @@ const getRandomDate = () => {
   return targetDate;
 };
 
-const generateComment = (min, max) => {
+const generateComment = () => {
   return {
     author: getRandomArrayItem(AUTHORS),
-    text: generateRandomText(getSentences(), min, max),
+    text: generateRandomText(getSentences(), MIN_COMMENT_SENTENCE, MAX_COMMENT_SENTENCE),
     emoji: getRandomArrayItem(EMOJI),
     date: getRandomDate()
   };
@@ -43,10 +43,10 @@ const generateComments = () => {
   let comments = [];
   const commentsCount = getRandomIntegerNumber(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT);
   for (let i = 0; i < commentsCount; i++) {
-    comments.push(generateComment(MIN_COMMENT_SENTENCE, MAX_COMMENT_SENTENCE));
+    comments.push(generateComment());
   }
 
   return comments;
 };
 
-export {generateComments};
+export {generateComment, generateComments};

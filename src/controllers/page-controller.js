@@ -54,9 +54,14 @@ export default class PageController {
 
   _renderFilms(container, films) {
     films.forEach((film) => {
-      const controller = new MovieController(container, this._onDataChange, this._onViewChange);
+      const controller = new MovieController(
+          container,
+          this._onDataChange,
+          this._onViewChange
+      );
       this._showedFilmsControllers.push(controller);
-      controller.render(film);
+      controller.renderFilm(film);
+      controller.renderFilmDetails(film);
     });
   }
 
