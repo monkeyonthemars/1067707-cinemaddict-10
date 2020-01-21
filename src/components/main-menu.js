@@ -1,8 +1,8 @@
 import AbstractComponent from './abstract-component.js';
 import {generateSortMenu} from '../mock/menu.js';
 
-const generateSiteMenuList = (data) => {
-  return data
+const generateSiteMenuList = (siteMenu) => {
+  return siteMenu
     .map((item) => {
       return (
         `<a href="#${item.link}" class="main-navigation__item
@@ -13,19 +13,19 @@ const generateSiteMenuList = (data) => {
     }).join(`\n`);
 };
 
-const generateSortMenuList = (data) => {
-  return data
+const generateSortMenuList = (sortMenu) => {
+  return sortMenu
     .map((item) => {
       return (`<li><a href="#" class="sort__button">${item}</a></li>`
       );
     }).join(`\n`);
 };
 
-const createMainMenuTemplate = (data) => {
+const createMainMenuTemplate = (siteMenu) => {
 
   let sortMenu = generateSortMenu();
 
-  const siteMenuList = generateSiteMenuList(data);
+  const siteMenuList = generateSiteMenuList(siteMenu);
   const sortMenuList = generateSortMenuList(sortMenu);
 
   return `<nav class="main-navigation">

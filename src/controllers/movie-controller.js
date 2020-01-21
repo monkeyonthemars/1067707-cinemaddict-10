@@ -28,16 +28,19 @@ export default class MovieController {
 
   _openFilmDetails() {
     this._onViewChange();
+    this._filmDetailsComponent.enableAnimation();
     document.body.appendChild(this._filmDetailsComponent.getElement());
-    this._filmDetailsComponent.setCloseButtonClickHandler(this._closeFilmDetails);
-    this._filmDetailsComponent.setRatingButtonClickHandler(this._closeFilmDetails);
+    this._filmDetailsComponent.recoveryListeners(this._closeFilmDetails);
     this._mode = Mode.DETAILS;
   }
 
-  _updateFilmDetails(film) {
+  _updateFilmDetails(oldFilmId, newFilm) {
     document.body.removeChild(this._filmDetailsComponent.getElement());
-    this.renderFilmDetails(film);
+    this._onDataChange(oldFilmId, newFilm);
+    this.renderFilmDetails(newFilm);
+    this._filmDetailsComponent.disableAnimation();
     document.body.appendChild(this._filmDetailsComponent.getElement());
+    this._filmDetailsComponent.recoveryListeners(this._closeFilmDetails);
   }
 
   destroy() {
@@ -105,14 +108,15 @@ export default class MovieController {
         comments: [].concat(film.comments, newComment)
       }));
     });
+
   }
 
   _onMovieDataChange(oldFilmId, newFilm) {
-    this._updateFilmDetails(newFilm);
+    this._updateFilmDetails(oldFilmId, newFilm);
   }
 
   _onCommentsDataChange(oldFilmId, newFilm) {
-    this._updateFilmDetails(newFilm);
+    this._updateFilmDetails(oldFilmId, newFilm);
   }
 
   setDefaultView() {

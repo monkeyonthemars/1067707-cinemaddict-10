@@ -186,11 +186,11 @@ const createFilmDetailsTemplate = (film) => {
           <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite"${favorite}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
-      </div>"
+      </div>
 
       ${ratingTemplate}
 
-      "<div class="form-details__bottom-container">
+      <div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
@@ -238,7 +238,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
     this._film = film;
     this._isWatchlist = !!film.isWatchlist;
-    this._isHistory = !!film._isHistory;
+    this._isHistory = !!film.isHistory;
     this._isFavorites = !!film.isFavorites;
     this._selectedEmoji = null;
     this._subscribeOnEvents();
@@ -270,12 +270,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
-  setCloseButtonClickHandler(handler) {
+  recoveryListeners(handler) {
     this._closeButtonClickHandler = handler;
-    this._setCloseButtonClickHandler();
-  }
-
-  recoveryListeners() {
     this._subscribeOnEvents();
   }
 
@@ -313,10 +309,10 @@ export default class FilmDetails extends AbstractSmartComponent {
     commentInput.addEventListener(`keydown`, (evt) => {
       if (evt.key === `Enter` && this._selectedEmoji !== null) {
         const newComment = {
-          author: `me`,
+          author: `me`, // TODO Автор будет выдаваться сервером
           text: commentInput.value,
           emoji: this._selectedEmoji,
-          date: new Date()
+          date: new Date() // TODO Сменить формат даты
         };
 
         handler(newComment);
@@ -332,6 +328,14 @@ export default class FilmDetails extends AbstractSmartComponent {
         .innerHTML = evt.target.outerHTML;
       this._selectedEmoji = evt.target.getAttribute(`src`).slice(1);
     }));
+  }
+
+  disableAnimation() {
+    this.getElement().style.animation = `none`;
+  }
+
+  enableAnimation() {
+    this.getElement().removeAttribute(`style`);
   }
 
 }

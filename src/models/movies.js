@@ -29,7 +29,7 @@ export default class Movies {
     this._movies = Array.from(movies);
   }
 
-  updateTask(id, movie) {
+  updateMovie(id, movie) {
     const index = this._movie.findIndex((it) => it.id === id);
 
     if (index === -1) {
