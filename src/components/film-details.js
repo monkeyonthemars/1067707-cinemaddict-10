@@ -326,7 +326,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       this.getElement()
         .querySelector(`.film-details__add-emoji-label`)
         .innerHTML = evt.target.outerHTML;
-      this._selectedEmoji = evt.target.getAttribute(`src`).slice(1);
+      this._selectedEmoji = evt.target.getAttribute(`src`);
     }));
   }
 
