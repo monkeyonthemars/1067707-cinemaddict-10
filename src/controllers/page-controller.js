@@ -9,12 +9,13 @@ const FILMS_COUNT_IN_BLOCK = 5;
 const MAX_SORTED_FILMS = 2;
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
+    this._moviesModel = moviesModel;
     this._filmsListContainer = this._container.querySelector(`.films-list .films-list__container`);
     this._filmsListExtraContainer = this._container.querySelectorAll(`.films-list--extra .films-list__container`);
 
-    this._films = null;
+    this._films = this._moviesModel.getMovies();
     this._startBlock = 0;
     this._endBlock = FILMS_COUNT_IN_BLOCK;
 
@@ -22,13 +23,15 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._renderFilmsBlock = this._renderFilmsBlock.bind(this);
 
     this._showedFilmsControllers = [];
+
+    this._moviesModel.onFilterChange(this._onFilterChange);
   }
 
-  render(films) {
-    this._films = films;
+  render() {
 
     render(
         this._container.querySelector(`.films-list`),
@@ -51,9 +54,14 @@ export default class PageController {
 
   _renderFilms(container, films) {
     films.forEach((film) => {
-      const controller = new MovieController(container, this._onDataChange, this._onViewChange);
+      const controller = new MovieController(
+          container,
+          this._onDataChange,
+          this._onViewChange
+      );
       this._showedFilmsControllers.push(controller);
-      controller.render(film);
+      controller.renderFilm(film);
+      controller.renderFilmDetails(film);
     });
   }
 
@@ -93,9 +101,16 @@ export default class PageController {
         newFilm);
     this._removeFilms();
     this.render(this._films);
+    this._onFilterChange();
   }
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((filmController) => filmController.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._films = this._moviesModel.getMovies();
+    this._removeFilms();
+    this.render();
   }
 }

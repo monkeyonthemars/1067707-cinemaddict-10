@@ -1,5 +1,6 @@
 import {getRandomIntegerNumber, getRandomArrayItem, generateRandomText} from '../utils/random.js';
 import {getSentences} from '../utils/mock.js';
+import {generateComments} from '../mock/comments.js';
 
 const MIN_YEAR = 1980;
 const MAX_YEAR = 2019;
@@ -170,9 +171,10 @@ const generateFilmCard = () => {
     filmRating: getRandomArrayItem(FILMRATINGS),
     country: getRandomArrayItem(COUNTRIES),
     commentsCount: getRandomIntegerNumber(0, 50),
-    isWatchlist: true,
-    isWatched: true,
-    isFavorite: true
+    isWatchlist: Math.random() > 0.5,
+    isHistory: Math.random() > 0.5,
+    isFavorites: Math.random() > 0.5,
+    comments: generateComments()
   };
 };
 
