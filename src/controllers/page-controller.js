@@ -1,7 +1,7 @@
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 
 import {RenderPosition, render, remove} from '../utils/render.js';
-import {getSotredArray} from '../utils/array.js';
+import {getSotredArrayByFieldName, getSotredArrayByFieldLength} from '../utils/array.js';
 
 import MovieController from './movie-controller.js';
 
@@ -9,9 +9,12 @@ const FILMS_COUNT_IN_BLOCK = 5;
 const MAX_SORTED_FILMS = 2;
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api, filtersController) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this._api = api;
+    this._filtersController = filtersController;
+
     this._filmsListContainer = this._container.querySelector(`.films-list .films-list__container`);
     this._filmsListExtraContainer = this._container.querySelectorAll(`.films-list--extra .films-list__container`);
 
@@ -57,11 +60,11 @@ export default class PageController {
       const controller = new MovieController(
           container,
           this._onDataChange,
-          this._onViewChange
+          this._onViewChange,
+          this._api
       );
       this._showedFilmsControllers.push(controller);
       controller.renderFilm(film);
-      controller.renderFilmDetails(film);
     });
   }
 
@@ -79,14 +82,14 @@ export default class PageController {
     // TODO переделать обращение к элементу по индексу
     this._renderFilms(
         this._filmsListExtraContainer[0],
-        getSotredArray(this._films, `rating`, MAX_SORTED_FILMS));
+        getSotredArrayByFieldName(this._films, `totalRating`, MAX_SORTED_FILMS));
   }
 
   _renderMostCommentedFilms() {
     // TODO переделать обращение к элементу по индексу
     this._renderFilms(
         this._filmsListExtraContainer[1],
-        getSotredArray(this._films, `commentsCount`, MAX_SORTED_FILMS));
+        getSotredArrayByFieldLength(this._films, `comments`, MAX_SORTED_FILMS));
   }
 
   _removeFilms() {
@@ -95,13 +98,16 @@ export default class PageController {
   }
 
   _onDataChange(oldFilmId, newFilm) {
-    this._films.splice(
-        this._films.findIndex((film) => film.id === oldFilmId),
-        1,
-        newFilm);
-    this._removeFilms();
-    this.render(this._films);
-    this._onFilterChange();
+    this._api.updateMovie(oldFilmId, newFilm)
+    .then((film) => {
+      this._films.splice(
+          this._films.findIndex((filmItem) => filmItem.id === oldFilmId),
+          1,
+          film);
+      this._removeFilms();
+      this.render(this._films);
+      this._onFilterChange();
+    });
   }
 
   _onViewChange() {
@@ -112,5 +118,6 @@ export default class PageController {
     this._films = this._moviesModel.getMovies();
     this._removeFilms();
     this.render();
+    this._filtersController.render();
   }
 }

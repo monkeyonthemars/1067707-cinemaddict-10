@@ -3,10 +3,20 @@ import AbstractComponent from './abstract-component.js';
 const MAX_LENGTH_DESCRIPTION = 140;
 const FILM_CARD_CONTROLS_ITEM_ACTIVE = ` film-card__controls-item--active`;
 
-const createFilmCardTemplate = (film) => {
+const createFilmCardTemplate = (film, commentsCount) => {
 
-  const {title, rating, year, duration, genres, poster, description,
-    commentsCount, isWatchlist, isHistory, isFavorites} = film;
+  const {
+    title,
+    runtime,
+    genre,
+    poster,
+    description,
+    totalRating,
+    isFavorites,
+    isHistory,
+    isWatchlist,
+    releaseDate
+  } = film;
 
   const getShortText = (text, length) => {
     if (text.length > length) {
@@ -17,23 +27,23 @@ const createFilmCardTemplate = (film) => {
   };
 
   const shortDescription = getShortText(description, MAX_LENGTH_DESCRIPTION);
-  const genre = genres[0];
+  const firstGenre = genre[0];
   const watchlist = isWatchlist ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
   const history = isHistory ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
   const favorites = isFavorites ? FILM_CARD_CONTROLS_ITEM_ACTIVE : ``;
 
   return (
     `<article class="film-card">
-      <h3 class="film-card__title">${title[`title`]}</h3>
-      <p class="film-card__rating">${rating}</p>
-      <p class="film-card__info">
-        <span class="film-card__year">${year}</span>
-        <span class="film-card__duration">${duration}</span>
-        <span class="film-card__genre">${genre}</span>
-      </p>
-      <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${shortDescription}</p>
-      <a class="film-card__comments">${commentsCount} comments</a>
+       <h3 class="film-card__title">${title}</h3>
+       <p class="film-card__rating">${totalRating}</p>
+       <p class="film-card__info">
+         <span class="film-card__year">${releaseDate}</span>
+         <span class="film-card__duration">${runtime}</span>
+         <span class="film-card__genre">${firstGenre}</span>
+       </p>
+       <img src="${poster}" alt="" class="film-card__poster">
+       <p class="film-card__description">${shortDescription}</p>
+       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${watchlist}">Add to watchlist</button>
         <button class="film-card__controls-item button film-card__controls-item--mark-as-watched${history}">Mark as watched</button>
@@ -44,13 +54,14 @@ const createFilmCardTemplate = (film) => {
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(film) {
+  constructor(data) {
     super();
-    this._film = film;
+    this._film = data;
+    this._commentsCount = data.comments.length;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film);
+    return createFilmCardTemplate(this._film, this._commentsCount);
   }
 
   setDetailButtonClickHandler(handler) {

@@ -2,16 +2,16 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 
 const generateCommentsList = (comments) => {
   return comments
-    .map((comment) => {
+    .map((commentItem) => {
 
-      const {emoji, text, author, date} = comment;
+      const {emotion, comment, author, date} = commentItem;
 
       return (`<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="${emoji}" width="55" height="55" alt="emoji">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
         </span>
         <div>
-          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${date}</span>
@@ -30,36 +30,36 @@ const generateGenresList = (genres) => {
     }).join(`\n`);
 };
 
-const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film, comments) => {
   const {
     title,
-    rating,
-    userRate,
-    duration,
-    genres,
+    alternativeTitle,
+    ageRating,
+    runtime,
+    genre,
     poster,
     description,
     director,
-    writer,
+    writers,
     actors,
     releaseDate,
-    filmRating,
-    country,
-    isWatchlist,
-    isHistory,
+    releaseCountry,
+    personalRating,
+    totalRating,
     isFavorites,
-    comments
+    isHistory,
+    isWatchlist,
   } = film;
 
   const commentsList = generateCommentsList(comments);
-  const genresList = generateGenresList(genres);
+  const genresList = generateGenresList(genre);
 
   const watchlist = isWatchlist ? ` checked` : ``;
   const watched = isHistory ? ` checked` : ``;
   const favorite = isFavorites ? ` checked` : ``;
 
   const userRates = Array(9).fill(``);
-  userRates.splice(userRate - 1, 0, `checked`);
+  userRates.splice(personalRating - 1, 0, `checked`);
 
   const ratingTemplate = isHistory ?
     `<div class="form-details__middle-container">
@@ -74,7 +74,7 @@ const createFilmDetailsTemplate = (film) => {
           </div>
 
           <section class="film-details__user-rating-inner">
-            <h3 class="film-details__user-rating-title">${title[`title`]}</h3>
+            <h3 class="film-details__user-rating-title">${alternativeTitle}</h3>
 
             <p class="film-details__user-rating-feelings">How you feel it?</p>
 
@@ -122,29 +122,29 @@ const createFilmDetailsTemplate = (film) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${poster}" alt="">
 
-            <p class="film-details__age">${filmRating}</p>
+            <p class="film-details__age">${ageRating}</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">${title[`title`]}</h3>
-                <p class="film-details__title-original">Original: ${title[`originalTitle`]}</p>
+                <h3 class="film-details__title">${alternativeTitle}</h3>
+                <p class="film-details__title-original">Original: ${title}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${rating}</p>
+                <p class="film-details__total-rating">${totalRating}</p>
               </div>
             </div>
 
             <table class="film-details__table">
               <tbody><tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">${director.join(`, `)}</td>
+                <td class="film-details__cell">${director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writer.join(`, `)}</td>
+                <td class="film-details__cell">${writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
@@ -156,11 +156,11 @@ const createFilmDetailsTemplate = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${duration}</td>
+                <td class="film-details__cell">${runtime}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${country}</td>
+                <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
@@ -234,9 +234,10 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
     this._isWatchlist = !!film.isWatchlist;
     this._isHistory = !!film.isHistory;
     this._isFavorites = !!film.isFavorites;
@@ -267,7 +268,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._film.isHistory = this._isHistory;
     this._film.isFavorites = this._isFavorites;
 
-    return createFilmDetailsTemplate(this._film);
+    return createFilmDetailsTemplate(this._film, this._comments);
   }
 
   recoveryListeners(handler) {

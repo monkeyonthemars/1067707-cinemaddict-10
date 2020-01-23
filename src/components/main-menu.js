@@ -1,5 +1,12 @@
 import AbstractComponent from './abstract-component.js';
-import {generateSortMenu} from '../mock/menu.js';
+
+const generateSortMenu = () => {
+  return [
+    `Sort by default`,
+    `Sort by date`,
+    `Sort by rating`
+  ];
+};
 
 const generateSiteMenuList = (siteMenu) => {
   return siteMenu
