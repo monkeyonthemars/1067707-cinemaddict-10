@@ -1,4 +1,4 @@
-import MenuFilters from '../components/main-menu.js';
+import Filter from '../components/filter.js';
 import {RenderPosition, render, replace} from '../utils/render.js';
 
 export default class FilterController {
@@ -13,7 +13,7 @@ export default class FilterController {
   render() {
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new MenuFilters(this._moviesModel.getFilter());
+    this._filterComponent = new Filter(this._moviesModel.getFilter());
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {

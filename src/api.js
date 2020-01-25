@@ -1,4 +1,5 @@
-import MovieModel from './models/movie.js';
+import Movie from './models/movie.js';
+import Comments from './models/comments';
 
 const Method = {
   GET: `GET`,
@@ -22,18 +23,26 @@ const API = class {
   }
 
   getMovies() {
-    return this._load({url: `movies`})
+    return this._load({url: `movies/`})
       .then((response) => response.json())
-      .then(MovieModel.parseMovies);
+      .then(Movie.parseMovies);
   }
 
-  createMovie(Movie) {
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
+      .then((response) => response.json())
+      .then(Comments.parseComments);
   }
 
-  updateMovie(id, data) {
-  }
-
-  deleteMovie(id) {
+  updateMovie(id, movie) {
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(movie.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Movie.parseMovie);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
