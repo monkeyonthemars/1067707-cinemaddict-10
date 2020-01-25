@@ -1,4 +1,5 @@
 import ShowMoreButtonComponent from '../components/show-more-button.js';
+import SortComponent from '../components/sort.js';
 
 import {RenderPosition, render, remove} from '../utils/render.js';
 import {getSotredArrayByFieldName, getSotredArrayByFieldLength} from '../utils/array.js';
@@ -19,10 +20,12 @@ export default class PageController {
     this._filmsListExtraContainer = this._container.querySelectorAll(`.films-list--extra .films-list__container`);
 
     this._films = this._moviesModel.getMovies();
+    this._filteredFilms = this._films;
     this._startBlock = 0;
     this._endBlock = FILMS_COUNT_IN_BLOCK;
 
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._sortComponent = new SortComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -35,6 +38,15 @@ export default class PageController {
   }
 
   render() {
+
+    render(
+        this._container,
+        this._sortComponent,
+        RenderPosition.AFTERBEGIN
+    );
+
+    // TO DO написать обработчик сотрировки
+    // this._sortComponent.setSortChangeHandler();
 
     render(
         this._container.querySelector(`.films-list`),
@@ -53,6 +65,7 @@ export default class PageController {
 
     this._renderTopRatedFilms();
     this._renderMostCommentedFilms();
+
   }
 
   _renderFilms(container, films) {
@@ -71,9 +84,9 @@ export default class PageController {
   _renderFilmsBlock() {
     this._renderFilms(
         this._filmsListContainer,
-        this._films.slice(this._startBlock, this._endBlock));
+        this._filteredFilms.slice(this._startBlock, this._endBlock));
 
-    if (this._endBlock >= this._films.length) {
+    if (this._endBlock >= this._filteredFilms.length) {
       remove(this._showMoreButtonComponent);
     }
   }
@@ -115,7 +128,7 @@ export default class PageController {
   }
 
   _onFilterChange() {
-    this._films = this._moviesModel.getMovies();
+    this._filteredFilms = this._moviesModel.getMovies();
     this._removeFilms();
     this.render();
     this._filtersController.render();
