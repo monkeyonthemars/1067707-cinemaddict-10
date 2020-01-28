@@ -1,19 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-
-const getUserRate = (watchedFilmsCount) => {
-
-  switch (true) {
-    case (watchedFilmsCount > 0 && watchedFilmsCount < 11):
-      return `novice`;
-    case (watchedFilmsCount > 10 && watchedFilmsCount < 21):
-      return `fan`;
-    case (watchedFilmsCount > 20):
-      return `movie buff`;
-    default:
-      return ``;
-  }
-
-};
+import {getUserRate} from '../models/profile.js';
 
 const createProfileRatingTemplate = (watchedFilmsCount) => {
 
@@ -26,12 +12,12 @@ const createProfileRatingTemplate = (watchedFilmsCount) => {
 };
 
 export default class ProfileRating extends AbstractComponent {
-  constructor(user) {
+  constructor(watchedFilmsCount) {
     super();
-    this._user = user;
+    this._watchedFilmsCount = watchedFilmsCount;
   }
 
   getTemplate() {
-    return createProfileRatingTemplate(this._user);
+    return createProfileRatingTemplate(this._watchedFilmsCount);
   }
 }

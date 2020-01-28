@@ -25,12 +25,10 @@ export default class MovieController {
 
   _closeFilmDetails() {
     document.body.removeChild(this._filmDetailsComponent.getElement());
-
     this._mode = Mode.DEFAULT;
   }
 
   _openFilmDetails() {
-
     this._api.getComments(this._filmComponent._film.id)
     .then((comments) => {
       this._filmComments = comments;

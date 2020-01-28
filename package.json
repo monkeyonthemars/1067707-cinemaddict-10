@@ -14,5 +14,12 @@
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0"
+  },
+  "dependencies": {
+    "chart": "0.1.2",
+    "chart.js": "2.9.3",
+    "chartjs-plugin-datalabels": "0.7.0",
+    "flatpickr": "4.6.3",
+    "moment": "2.24.0"
   }
 }

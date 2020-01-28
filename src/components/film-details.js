@@ -1,4 +1,5 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
+import {formatDate, formatDuration, formatComentDate} from '../utils/date.js';
 
 const generateCommentsList = (comments) => {
   return comments
@@ -14,7 +15,7 @@ const generateCommentsList = (comments) => {
           <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${date}</span>
+            <span class="film-details__comment-day">${formatComentDate(date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -152,11 +153,11 @@ const createFilmDetailsTemplate = (film, comments) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate}</td>
+                <td class="film-details__cell">${formatDate(releaseDate)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${formatDuration(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -247,6 +248,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     this._setCloseButtonClickHandler();
+    this._setEscButtonClickHandler();
     this.setRatingButtonClickHandler();
     this._setEmojiHandler();
   }
@@ -254,7 +256,15 @@ export default class FilmDetails extends AbstractSmartComponent {
   _setCloseButtonClickHandler() {
     this.getElement()
       .querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, this._closeButtonClickHandler);
+      .addEventListener(`click`, this._closeHandler);
+  }
+
+  _setEscButtonClickHandler() {
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.key === `Escape`) {
+        this._closeHandler();
+      }
+    });
   }
 
   setRatingButtonClickHandler() {
@@ -272,7 +282,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners(handler) {
-    this._closeButtonClickHandler = handler;
+    this._closeHandler = handler;
     this._subscribeOnEvents();
   }
 
