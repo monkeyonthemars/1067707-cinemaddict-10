@@ -1,8 +1,13 @@
-const FilterType = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
+import moment from 'moment';
+import {FilterType, SortType} from '../components/filter.js';
+
+
+export const Period = {
+  ALL_TIME: moment(new Date(0)),
+  TODAY: moment().subtract(1, `days`),
+  WEEK: moment().subtract(1, `weeks`),
+  MONTH: moment().subtract(1, `months`),
+  YEAR: moment().subtract(1, `years`),
 };
 
 export default class Movies {
@@ -10,19 +15,39 @@ export default class Movies {
   constructor() {
     this._movies = [];
     this._activeFilterType = FilterType.ALL;
+    this._activeSortType = SortType.DEFAULT;
   }
 
   getMovies() {
+
+    let movies;
+
     switch (this._activeFilterType) {
       case FilterType.WATCHLIST:
-        return this._movies.filter((it) => it.isWatchlist);
+        movies = this._movies.filter((it) => it.isWatchlist);
+        break;
       case FilterType.HISTORY:
-        return this._movies.filter((it) => it.isHistory);
+        movies = this._movies.filter((it) => it.isHistory);
+        break;
       case FilterType.FAVORITES:
-        return this._movies.filter((it) => it.isFavorites);
+        movies = this._movies.filter((it) => it.isFavorites);
+        break;
+      case FilterType.ALL:
+      default:
+        movies = this._movies;
+        break;
     }
 
-    return this._movies;
+    switch (this._activeSortType) {
+      case SortType.RATING:
+        movies = movies.sort((a, b) => b.totalRating - a.totalRating);
+        break;
+      case SortType.DATE:
+        movies = movies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+        break;
+    }
+
+    return movies;
   }
 
   setMovies(movies) {
@@ -51,16 +76,66 @@ export default class Movies {
   }
 
   getFilter() {
-    const filters = Object.values(FilterType).map((filterType) => {
-      return {
+    const filters = {};
+    for (const filterType of Object.values(FilterType)) {
+      filters[filterType] = {
         link: filterType,
         title: filterType[0].toUpperCase() + filterType.slice(1),
         count: this._movies.filter((film) => film[`is${filterType[0].toUpperCase()}${filterType.slice(1)}`]).length,
         isActive: this._activeFilterType === filterType
       };
-    });
+    }
 
     return filters;
+  }
+
+  setSorting(sortType) {
+    this._activeSortType = sortType;
+  }
+
+  getUserMoviesStats(period) {
+    const moviesFromPeriod = this._movies
+      .filter((movie) => movie.isHistory && moment(movie.watchingDate) >= period);
+
+    const moviesStats = {
+      moviesNumber: this._getMoviesCount(moviesFromPeriod),
+      duration: this._getMoviesDuration(moviesFromPeriod),
+      genres: this._getMoviesGenres(moviesFromPeriod)
+    };
+
+    return moviesStats;
+  }
+
+  _getMoviesCount(movies) {
+    return movies.length;
+  }
+
+  _getMoviesDuration(movies) {
+    return movies
+      .reduce((acc, it) => {
+        return acc + it.runtime;
+      }, 0);
+  }
+
+  _getMoviesGenres(movies) {
+    const genresCounter = {};
+    const genres = [];
+
+    movies.forEach((movie) => {
+      Array.from(movie.genre).forEach((genre) => {
+        genresCounter[genre] = (genresCounter[genre] || 0) + 1;
+      });
+    });
+
+    Object.keys(genresCounter).forEach((genre) => {
+      genres.push({name: genre, moviesNumber: genresCounter[genre]});
+    });
+
+    return genres.sort((a, b) => b.moviesNumber - a.moviesNumber);
+  }
+
+  getWatchedFilmsCount() {
+    return this._movies.filter((it) => it.isWatchlist).length;
   }
 
 }

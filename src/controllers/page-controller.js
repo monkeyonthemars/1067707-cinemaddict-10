@@ -45,9 +45,6 @@ export default class PageController {
         RenderPosition.AFTERBEGIN
     );
 
-    // TO DO написать обработчик сотрировки
-    // this._sortComponent.setSortChangeHandler();
-
     render(
         this._container.querySelector(`.films-list`),
         this._showMoreButtonComponent,
@@ -65,6 +62,14 @@ export default class PageController {
 
     this._renderTopRatedFilms();
     this._renderMostCommentedFilms();
+
+    this._sortComponent.setSortChangeHandler((sortType) => {
+      this._moviesModel.setSorting(sortType);
+      this._filteredFilms = this._moviesModel.getMovies();
+      this._removeFilms();
+      this.render(this._films);
+      this._onFilterChange();
+    });
 
   }
 

@@ -25,12 +25,10 @@ export default class MovieController {
 
   _closeFilmDetails() {
     document.body.removeChild(this._filmDetailsComponent.getElement());
-
     this._mode = Mode.DEFAULT;
   }
 
   _openFilmDetails() {
-
     this._api.getComments(this._filmComponent._film.id)
     .then((comments) => {
       this._filmComments = comments;
@@ -72,6 +70,7 @@ export default class MovieController {
     this._filmComponent.setWatchedButtonClickHandler(() => {
       const newMovie = Movie.cloneMovie(film);
       newMovie.isHistory = !newMovie.isHistory;
+      newMovie.watchingDate = new Date();
       this._onDataChange(film.id, newMovie);
     });
 
@@ -96,6 +95,7 @@ export default class MovieController {
     this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
       const newMovie = Movie.cloneMovie(film);
       newMovie.isHistory = !newMovie.isHistory;
+      newMovie.watchingDate = new Date();
       this._onMovieDataChange(film.id, newMovie);
     });
 

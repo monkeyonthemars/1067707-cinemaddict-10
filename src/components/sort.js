@@ -1,28 +1,26 @@
 import AbstractComponent from './abstract-component.js';
 
-const generateSortMenu = () => {
-  return [
-    `Sort by default`,
-    `Sort by date`,
-    `Sort by rating`
-  ];
+const ACTIVE_BUTTON_CLASS = `sort__button--active`;
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
 };
 
-const generateSortList = (sortMenu) => {
-  return sortMenu
-    .map((item) => {
-      return (`<li><a href="#" class="sort__button">${item}</a></li>`
-      );
-    }).join(`\n`);
+const generateSortList = () => {
+  return (
+    `<ul class="sort">
+        <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by ${SortType.DEFAULT}</a></li>
+        <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by ${SortType.DATE}</a></li>
+        <li><a href="#" data-sort-type="${SortType.RATING}" class="sort__button">Sort by ${SortType.RATING}</a></li>
+    </ul>`
+  );
 };
 
 const createSortTemplate = () => {
-
-  const sortMenu = generateSortMenu();
-  const sortMenuList = generateSortList(sortMenu);
-
   return `<ul class="sort">
-      ${sortMenuList}
+      ${generateSortList()}
     </ul></div>`;
 };
 
@@ -38,8 +36,24 @@ export default class Sort extends AbstractComponent {
 
   setSortChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      const sortName = evt.target.hash.slice(1);
-      handler(sortName);
+      evt.preventDefault();
+
+      if (evt.target.classList.contains(ACTIVE_BUTTON_CLASS)) {
+        return;
+      }
+
+      const sortType = evt.target.dataset.sortType;
+
+      this.getElement().querySelector(`.${ACTIVE_BUTTON_CLASS}`).classList.remove(ACTIVE_BUTTON_CLASS);
+      evt.target.classList.add(ACTIVE_BUTTON_CLASS);
+
+      if (this._activeSortType === sortType) {
+        return;
+      }
+
+      this._activeSortType = sortType;
+
+      handler(this._activeSortType);
     });
   }
 

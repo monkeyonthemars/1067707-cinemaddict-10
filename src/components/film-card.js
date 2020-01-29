@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component.js';
+import {formatYear} from '../utils/date.js';
 
 const MAX_LENGTH_DESCRIPTION = 140;
 const FILM_CARD_CONTROLS_ITEM_ACTIVE = ` film-card__controls-item--active`;
@@ -37,7 +38,7 @@ const createFilmCardTemplate = (film, commentsCount) => {
        <h3 class="film-card__title">${title}</h3>
        <p class="film-card__rating">${totalRating}</p>
        <p class="film-card__info">
-         <span class="film-card__year">${releaseDate}</span>
+         <span class="film-card__year">${formatYear(releaseDate)}</span>
          <span class="film-card__duration">${runtime}</span>
          <span class="film-card__genre">${firstGenre}</span>
        </p>
