@@ -1,5 +1,5 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
-import {formatDate, formatDuration, formatComentDate} from '../utils/date.js';
+import {formatDate, formatDuration, formatCommentDate} from '../utils/date.js';
 
 const generateCommentsList = (comments) => {
   return comments
@@ -15,7 +15,7 @@ const generateCommentsList = (comments) => {
           <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${formatComentDate(date)}</span>
+            <span class="film-details__comment-day">${formatCommentDate(date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>

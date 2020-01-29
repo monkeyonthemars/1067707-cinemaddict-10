@@ -46,6 +46,7 @@ api.getMovies()
           filmListComponent.show();
           break;
         case MenuType.STATS:
+          statisticsController.render();
           statisticsController.show();
           filmListComponent.hide();
           break;

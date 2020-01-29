@@ -70,6 +70,7 @@ export default class MovieController {
     this._filmComponent.setWatchedButtonClickHandler(() => {
       const newMovie = Movie.cloneMovie(film);
       newMovie.isHistory = !newMovie.isHistory;
+      newMovie.watchingDate = new Date();
       this._onDataChange(film.id, newMovie);
     });
 
@@ -94,6 +95,7 @@ export default class MovieController {
     this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
       const newMovie = Movie.cloneMovie(film);
       newMovie.isHistory = !newMovie.isHistory;
+      newMovie.watchingDate = new Date();
       this._onMovieDataChange(film.id, newMovie);
     });
 

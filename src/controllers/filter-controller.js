@@ -36,6 +36,9 @@ export default class FilterController {
 
   setChangeMenuHandler(handler) {
     this._container.addEventListener(`click`, (evt) => {
+      if (evt.target.dataset.menuType === undefined) {
+        return;
+      }
       this._activeItem = evt.target.dataset.menuType;
       this.render();
       handler(this._activeItem);

@@ -12,8 +12,8 @@ const formatDuration = (date) => {
   return moment.utc(moment.duration(date, `m`).asMilliseconds()).format(`h:mm`);
 };
 
-const formatComentDate = (date) => {
+const formatCommentDate = (date) => {
   return moment(date).fromNow();
 };
 
-export {formatYear, formatDate, formatDuration, formatComentDate};
+export {formatYear, formatDate, formatDuration, formatCommentDate};
