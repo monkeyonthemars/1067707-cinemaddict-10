@@ -43,7 +43,7 @@ export default class Filter extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      if (evt.srcElement.nodeName !== `A`) {
+      if (evt.target.tagName !== `A`) {
         return;
       }
       const filterName = evt.target.hash.slice(1);

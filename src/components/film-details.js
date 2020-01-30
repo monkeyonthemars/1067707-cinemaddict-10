@@ -249,7 +249,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   _subscribeOnEvents() {
     this._setCloseButtonClickHandler();
     this._setEscButtonClickHandler();
-    this.setRatingButtonClickHandler();
     this._setEmojiHandler();
   }
 
@@ -267,10 +266,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     });
   }
 
-  setRatingButtonClickHandler() {
-    document.querySelectorAll(`.film-details__user-rating-input`).forEach((item) => item.addEventListener(`click`, () => {
-      this._film.userRate = item.value;
-    }));
+  setRatingButtonClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`)
+      .forEach((item) => item.addEventListener(`click`, handler));
   }
 
   getTemplate() {
@@ -316,13 +314,11 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   setNewCommentHandler(handler) {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
-
-    commentInput.addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Enter` && this._selectedEmoji !== null) {
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.key === `Enter` && evt.ctrlKey && this._selectedEmoji !== null) {
         const newComment = {
-          author: `me`, // TODO Автор будет выдаваться сервером
-          text: commentInput.value,
-          emoji: this._selectedEmoji,
+          comment: commentInput.value,
+          emotion: this._selectedEmoji,
           date: new Date() // TODO Сменить формат даты
         };
 
@@ -337,7 +333,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       this.getElement()
         .querySelector(`.film-details__add-emoji-label`)
         .innerHTML = evt.target.outerHTML;
-      this._selectedEmoji = evt.target.getAttribute(`src`);
+      this._selectedEmoji = evt.target.getAttribute(`src`).match(/.*\/(.+?)\./)[1];
     }));
   }
 
@@ -347,6 +343,55 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   enableAnimation() {
     this.getElement().removeAttribute(`style`);
+  }
+
+  errorRatingSubmitHandler() {
+    const SHAKE_TIMEOUT = 600;
+    const ratingForm = this.getElement().querySelector(`.film-details__user-rating-score`);
+    const ratingInputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+    const uncheckedRatingInputs = this.getElement().querySelectorAll(`input[name="score"]:not(:checked)`);
+
+    ratingForm.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    ratingInputs.forEach((input) => (input.disabled = true));
+    uncheckedRatingInputs.forEach((input) => (input.labels[0].style.backgroundColor = `red`));
+
+    setTimeout(() => {
+      ratingForm.style.animation = ``;
+      ratingInputs.forEach((input) => (input.disabled = false));
+      uncheckedRatingInputs.forEach((input) => (input.labels[0].style.backgroundColor = ``));
+    }, SHAKE_TIMEOUT);
+  }
+
+  errorCommentSubmitHandler() {
+    const SHAKE_TIMEOUT = 600;
+    const commentForm = this.getElement().querySelector(`.film-details__new-comment`);
+    const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+    const uncheckedEmotionInputs = this.getElement().querySelectorAll(`input[name="comment-emoji"]:not(:checked)`);
+
+    commentForm.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    commentInput.readOnly = true;
+    commentInput.style.border = `3px solid red`;
+    uncheckedEmotionInputs.forEach((input) => (input.disabled = true));
+
+    setTimeout(() => {
+      commentForm.style.animation = ``;
+      commentInput.readOnly = false;
+      commentInput.style.border = ``;
+      uncheckedEmotionInputs.forEach((input) => (input.disabled = false));
+    }, SHAKE_TIMEOUT);
+  }
+
+  setRatingHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`)
+      .forEach((input) => input.addEventListener(`change`, handler));
+  }
+
+  setResetRatingHandler(handler) {
+    const resetRatingButton = this.getElement().querySelector(`.film-details__watched-reset`);
+
+    if (resetRatingButton) {
+      resetRatingButton.addEventListener(`click`, handler);
+    }
   }
 
 }
