@@ -1,6 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {getUserRate} from '../models/profile.js';
 import {Period} from '../models/movies.js';
 
 export const StatsPeriod = {
@@ -90,17 +91,17 @@ const renderGenresChart = (genresCtx, movies) => {
   });
 };
 
-const createStatisticsTemplate = ({moviesNumber, duration, genres}, profileRank) => {
+const createStatisticsTemplate = ({moviesNumber, duration, genres}, watchedFilmsCount) => {
   const hours = Math.floor(duration / 60);
   const minutes = duration % hours;
 
   return (
     `<section class="statistic">
-      <p class="statistic__rank">
+      ${watchedFilmsCount === 0 ? `` : `<p class="statistic__rank">
         Your rank
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">${profileRank}</span>
-      </p>
+        <span class="statistic__rank-label">${getUserRate(watchedFilmsCount)}</span>
+      </p>`}
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>

@@ -1,6 +1,5 @@
 import {render, RenderPosition, replace} from '../utils/render.js';
 import {Period} from '../models/movies.js';
-import {getUserRate} from '../models/profile.js';
 import Statistics from '../components/statistics.js';
 
 export default class StatisticsController {
@@ -16,8 +15,7 @@ export default class StatisticsController {
     const oldComponent = this._statistics;
     const watchedFilmsCount = this._moviesModel.getWatchedFilmsCount();
     const userMoviesStats = this._moviesModel.getUserMoviesStats(this._period);
-    const userRate = getUserRate(watchedFilmsCount);
-    this._statistics = new Statistics(userMoviesStats, userRate);
+    this._statistics = new Statistics(userMoviesStats, watchedFilmsCount);
     this._statistics.setCheckedPeriod(this._period);
 
     this._statistics.setChangePeriod((period) => {

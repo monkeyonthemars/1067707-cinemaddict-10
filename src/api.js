@@ -8,8 +8,13 @@ const Method = {
   DELETE: `DELETE`
 };
 
+const HTTP_STATUS = {
+  OK_START: 200,
+  OK_END: 299
+};
+
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= HTTP_STATUS.OK_START && response.status <= HTTP_STATUS.OK_END) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);

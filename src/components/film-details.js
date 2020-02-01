@@ -1,5 +1,5 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
-import {formatDate, formatDuration, formatCommentDate} from '../utils/date.js';
+import {formatDate, formatDuration, formatCommentDate, toISODate} from '../utils/date.js';
 
 const generateCommentsList = (comments) => {
   return comments
@@ -25,13 +25,19 @@ const generateCommentsList = (comments) => {
 };
 
 const generateGenresList = (genres) => {
-  return genres
-    .map((genre) => {
-      return (`<span class="film-details__genre">${genre}</span>`);
-    }).join(`\n`);
+  return `<td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+    <td class="film-details__cell">
+      ${genres
+        .map((genre) => {
+          return (`<span class="film-details__genre">${genre}</span>`);
+        }).join(`\n`)}
+    </td>`;
 };
 
 const createFilmDetailsTemplate = (film, comments) => {
+  const MAX_RATE = 9;
+  const EMPTY_RATE = 0;
+
   const {
     title,
     alternativeTitle,
@@ -59,8 +65,10 @@ const createFilmDetailsTemplate = (film, comments) => {
   const watched = isHistory ? ` checked` : ``;
   const favorite = isFavorites ? ` checked` : ``;
 
-  const userRates = Array(9).fill(``);
-  userRates.splice(personalRating - 1, 0, `checked`);
+  const userRates = Array(MAX_RATE).fill(``);
+  if (personalRating !== EMPTY_RATE) {
+    userRates.splice(personalRating - 1, 0, `checked`);
+  }
 
   const ratingTemplate = isHistory ?
     `<div class="form-details__middle-container">
@@ -123,7 +131,7 @@ const createFilmDetailsTemplate = (film, comments) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${poster}" alt="">
 
-            <p class="film-details__age">${ageRating}</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
 
           <div class="film-details__info">
@@ -164,10 +172,7 @@ const createFilmDetailsTemplate = (film, comments) => {
                 <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">Genres</td>
-                <td class="film-details__cell">
-                  ${genresList}
-                </td>
+                ${genresList}
               </tr>
             </tbody></table>
 
@@ -248,7 +253,6 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     this._setCloseButtonClickHandler();
-    this._setEscButtonClickHandler();
     this._setEmojiHandler();
   }
 
@@ -258,17 +262,22 @@ export default class FilmDetails extends AbstractSmartComponent {
       .addEventListener(`click`, this._closeHandler);
   }
 
-  _setEscButtonClickHandler() {
-    document.addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Escape`) {
-        this._closeHandler();
-      }
-    });
-  }
-
   setRatingButtonClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__user-rating-input`)
       .forEach((item) => item.addEventListener(`click`, handler));
+  }
+
+  disableRatingElement() {
+    this.getElement().querySelector(`.film-details__user-rating-score`).style.pointerEvents = `none`;
+  }
+
+  enableRatingElement() {
+    this.getElement().querySelector(`.film-details__user-rating-score`).style.pointerEvents = `auto`;
+  }
+
+  setUndoRatingButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, handler);
   }
 
   getTemplate() {
@@ -307,6 +316,9 @@ export default class FilmDetails extends AbstractSmartComponent {
           const listItem = evt.target.closest(`li`);
           const index = Array.from(listItem.parentElement.children).indexOf(listItem);
 
+          evt.target.textContent = `Deleting…`;
+          evt.target.disables = true;
+
           handler(index);
         }
       });
@@ -319,9 +331,10 @@ export default class FilmDetails extends AbstractSmartComponent {
         const newComment = {
           comment: commentInput.value,
           emotion: this._selectedEmoji,
-          date: new Date() // TODO Сменить формат даты
+          date: toISODate(new Date())
         };
 
+        commentInput.disabled = true;
         handler(newComment);
       }
     });
@@ -360,6 +373,8 @@ export default class FilmDetails extends AbstractSmartComponent {
       ratingInputs.forEach((input) => (input.disabled = false));
       uncheckedRatingInputs.forEach((input) => (input.labels[0].style.backgroundColor = ``));
     }, SHAKE_TIMEOUT);
+
+    this.enableRatingElement();
   }
 
   errorCommentSubmitHandler() {
@@ -379,19 +394,17 @@ export default class FilmDetails extends AbstractSmartComponent {
       commentInput.style.border = ``;
       uncheckedEmotionInputs.forEach((input) => (input.disabled = false));
     }, SHAKE_TIMEOUT);
+
+    commentInput.disabled = false;
   }
 
-  setRatingHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__user-rating-input`)
-      .forEach((input) => input.addEventListener(`change`, handler));
-  }
-
-  setResetRatingHandler(handler) {
-    const resetRatingButton = this.getElement().querySelector(`.film-details__watched-reset`);
-
-    if (resetRatingButton) {
-      resetRatingButton.addEventListener(`click`, handler);
-    }
+  errorCommentDeleteHandler() {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((elem) => {
+      if (elem.disables) {
+        elem.textContent = `Delete`;
+        elem.disables = false;
+      }
+    });
   }
 
 }

@@ -1,3 +1,5 @@
+import {toISODate} from '../utils/date.js';
+
 export default class Movie {
   constructor(movie) {
     this.id = movie[`id`];
@@ -36,7 +38,7 @@ export default class Movie {
         'writers': this.writers,
         'actors': this.actors,
         'release': {
-          'date': this.releaseDate ? this.releaseDate.toISOString() : null,
+          'date': this.releaseDate ? toISODate(this.releaseDate) : null,
           'release_country': this.releaseCountry
         },
         'runtime': this.runtime,
@@ -47,7 +49,7 @@ export default class Movie {
         'personal_rating': this.personalRating,
         'watchlist': this.isWatchlist,
         'already_watched': this.isHistory,
-        'watching_date': this.watchingDate ? this.watchingDate.toISOString() : null,
+        'watching_date': this.watchingDate ? toISODate(this.watchingDate) : null,
         'favorite': this.isFavorites,
       },
     };

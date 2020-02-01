@@ -3,8 +3,7 @@ import AbstractComponent from './abstract-component.js';
 const createFilmListTemplate = () => {
   return `<section class="films">
     <section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
+      <h2 class="films-list__title visually-hidden">There are no movies in our database</h2>
       <div class="films-list__container">
 
       </div>
@@ -37,4 +36,19 @@ export default class FilmList extends AbstractComponent {
   getTemplate() {
     return createFilmListTemplate();
   }
+
+  showNoMoviesError() {
+    this.getElement().querySelector(`.films-list__title`).classList.remove(`visually-hidden`);
+    Array.from(this.getElement().querySelectorAll(`.films-list--extra`))
+      .forEach((el) => el.classList.add(`visually-hidden`));
+  }
+
+  hideTopRatedBlock() {
+    Array.from(this.getElement().querySelectorAll(`.films-list--extra`))[0].classList.add(`visually-hidden`);
+  }
+
+  hideMostCommentedBlock() {
+    Array.from(this.getElement().querySelectorAll(`.films-list--extra`))[1].classList.add(`visually-hidden`);
+  }
+
 }
