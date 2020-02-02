@@ -13,7 +13,11 @@ const formatDuration = (date) => {
 };
 
 const formatCommentDate = (date) => {
-  return moment(date).fromNow();
+  return moment(date).format(`YYYY/MM/DD HH:MM`);
 };
 
-export {formatYear, formatDate, formatDuration, formatCommentDate};
+const toISODate = (date) => {
+  return moment(date).toISOString();
+};
+
+export {formatYear, formatDate, formatDuration, formatCommentDate, toISODate};

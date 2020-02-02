@@ -31,8 +31,12 @@ api.getMovies()
     filtersController.render();
     render(siteMainElement, filmListComponent, RenderPosition.BEFOREEND);
 
+    if (movies.length === 0) {
+      filmListComponent.showNoMoviesError();
+    }
+
     const filmsElement = siteMainElement.querySelector(`.films`);
-    const pageController = new PageController(filmsElement, moviesModel, api, filtersController);
+    const pageController = new PageController(filmsElement, moviesModel, api, filtersController, filmListComponent);
     pageController.render();
 
     const statisticsController = new StatisticsController(siteMainElement, moviesModel);

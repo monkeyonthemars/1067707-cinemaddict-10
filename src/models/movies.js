@@ -40,10 +40,10 @@ export default class Movies {
 
     switch (this._activeSortType) {
       case SortType.RATING:
-        movies = movies.sort((a, b) => b.totalRating - a.totalRating);
+        movies = [...movies].sort((a, b) => b.totalRating - a.totalRating);
         break;
       case SortType.DATE:
-        movies = movies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+        movies = [...movies].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
         break;
     }
 
