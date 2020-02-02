@@ -4,7 +4,7 @@ import ProfileRatingComponent from './components/profile-rating.js';
 import StatisticsController from './controllers/statistics-controller.js';
 import PageController from './controllers/page-controller.js';
 import FilterController from './controllers/filter-controller.js';
-import {RenderPosition, render} from './utils/render.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import MoviesModel from './models/movies.js';
 
 export const MenuType = {
@@ -21,13 +21,27 @@ const siteHeaderElement = document.querySelector(`.header`);
 const filmListComponent = new FilmListComponent();
 const moviesModel = new MoviesModel();
 
+let watchedFilmsCount = 0;
+const profileComponent = new ProfileRatingComponent(watchedFilmsCount);
+render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
+const filtersController = new FilterController(siteMainElement, moviesModel);
+filtersController.render();
+render(siteMainElement, filmListComponent, RenderPosition.BEFOREEND);
+let filmsElement = siteMainElement.querySelector(`.films`);
+let pageController = new PageController(filmsElement, moviesModel, api, filtersController, filmListComponent);
+pageController.setLoading(true);
+pageController.render();
+
 api.getMovies()
   .then((movies) => {
+    pageController.setLoading(false);
+    remove(profileComponent);
+    remove(filmListComponent);
+
     moviesModel.setMovies(movies);
-    const watchedFilmsCount = moviesModel.getWatchedFilmsCount();
-    const profileComponent = new ProfileRatingComponent(watchedFilmsCount);
+    watchedFilmsCount = moviesModel.getWatchedFilmsCount();
+    profileComponent.setWatchedFilmsCount(watchedFilmsCount);
     render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
-    const filtersController = new FilterController(siteMainElement, moviesModel);
     filtersController.render();
     render(siteMainElement, filmListComponent, RenderPosition.BEFOREEND);
 
@@ -35,8 +49,8 @@ api.getMovies()
       filmListComponent.showNoMoviesError();
     }
 
-    const filmsElement = siteMainElement.querySelector(`.films`);
-    const pageController = new PageController(filmsElement, moviesModel, api, filtersController, filmListComponent);
+    filmsElement = siteMainElement.querySelector(`.films`);
+    pageController = new PageController(filmsElement, moviesModel, api, filtersController, filmListComponent);
     pageController.render();
 
     const statisticsController = new StatisticsController(siteMainElement, moviesModel);

@@ -326,7 +326,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   setNewCommentHandler(handler) {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
-    document.addEventListener(`keydown`, (evt) => {
+    this.getElement().addEventListener(`keydown`, (evt) => {
       if (evt.key === `Enter` && evt.ctrlKey && this._selectedEmoji !== null) {
         const newComment = {
           comment: commentInput.value,
@@ -358,7 +358,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().removeAttribute(`style`);
   }
 
-  errorRatingSubmitHandler() {
+  errorRatingSubmitHandler(oldPersonalRating) {
     const SHAKE_TIMEOUT = 600;
     const ratingForm = this.getElement().querySelector(`.film-details__user-rating-score`);
     const ratingInputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
@@ -372,6 +372,8 @@ export default class FilmDetails extends AbstractSmartComponent {
       ratingForm.style.animation = ``;
       ratingInputs.forEach((input) => (input.disabled = false));
       uncheckedRatingInputs.forEach((input) => (input.labels[0].style.backgroundColor = ``));
+      this.getElement().querySelector(`input[name="score"]:checked`).checked = false;
+      ratingInputs[oldPersonalRating - 1].checked = true;
     }, SHAKE_TIMEOUT);
 
     this.enableRatingElement();

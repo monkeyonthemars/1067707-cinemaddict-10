@@ -51,4 +51,10 @@ export default class FilmList extends AbstractComponent {
     Array.from(this.getElement().querySelectorAll(`.films-list--extra`))[1].classList.add(`visually-hidden`);
   }
 
+  showLoading() {
+    const loadingElement = this.getElement().querySelector(`.films-list .films-list__title`);
+    loadingElement.innerHTML = `Loading...`;
+    loadingElement.classList.remove(`visually-hidden`);
+  }
+
 }
