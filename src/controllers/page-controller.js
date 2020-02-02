@@ -21,7 +21,7 @@ export default class PageController {
     this._filmsListExtraContainer = this._container.querySelectorAll(`.films-list--extra .films-list__container`);
 
     this._films = this._moviesModel.getMovies();
-    this._filteredFilms = this._films;
+    this._filmsFiltered = this._films;
     this._startBlock = 0;
     this._endBlock = FILMS_COUNT_IN_BLOCK;
 
@@ -36,20 +36,13 @@ export default class PageController {
     this._showedFilmsControllers = [];
 
     this._isLoading = false;
-    this._setShowMoreButtonClickHandler();
 
     this._moviesModel.onFilterChange(this._onFilterChange);
   }
 
   _setShowMoreButtonClickHandler() {
     this._showMoreButtonComponent.setClickHandler(() => {
-      this._startBlock = this._endBlock;
-      this._endBlock += FILMS_COUNT_IN_BLOCK;
       this._renderFilmsBlock();
-      if (this._endBlock >= this._filteredFilms.length) {
-        remove(this._showMoreButtonComponent);
-        return;
-      }
     });
   }
 
@@ -58,20 +51,32 @@ export default class PageController {
   }
 
   render() {
+    if (this._isLoading) {
+      this._filmListComponent.showLoading();
+      this._filmListComponent.hideMostCommentedBlock();
+      this._filmListComponent.hideTopRatedBlock();
+      return;
+    }
+
     this._renderSortMenu();
-    this._renderShowMoreButton();
-    this._renderFilmsBlock();
+    remove(this._showMoreButtonComponent);
+    if (this._endBlock < this._filmsFiltered.length) {
+      this._renderShowMoreButton();
+      this._setShowMoreButtonClickHandler();
+    }
+
+    this._renderFilms(this._filmsListContainer, this._filmsFiltered.slice(0, this._endBlock));
+
     this._renderTopRatedFilms();
     this._renderMostCommentedFilms();
 
     this._sortComponent.setSortChangeHandler((sortType) => {
       this._moviesModel.setSorting(sortType);
-      this._filteredFilms = this._moviesModel.getMovies();
+      this._filmsFiltered = this._moviesModel.getMovies();
       this._removeFilms();
-      this.render(this._films);
-      this._onFilterChange();
+      this.render(this._filmsFiltered);
+      this._onFilterChange(false);
     });
-
   }
 
   _renderSortMenu() {
@@ -103,13 +108,19 @@ export default class PageController {
   }
 
   _renderFilmsBlock() {
+    this._startBlock = this._endBlock;
+    this._endBlock += FILMS_COUNT_IN_BLOCK;
     this._renderFilms(
         this._filmsListContainer,
-        this._filteredFilms.slice(this._startBlock, this._endBlock));
+        this._filmsFiltered.slice(this._startBlock, this._endBlock));
+    if (this._endBlock >= this._filmsFiltered.length) {
+      remove(this._showMoreButtonComponent);
+      return;
+    }
   }
 
   _renderTopRatedFilms() {
-    const topRatedMovies = getSotredArrayByFieldName(this._filteredFilms, `personalRating`, MAX_SORTED_FILMS);
+    const topRatedMovies = getSotredArrayByFieldName(this._films, `totalRating`, MAX_SORTED_FILMS);
     if (topRatedMovies.length === 0) {
       this._filmListComponent.hideTopRatedBlock();
       return;
@@ -120,7 +131,7 @@ export default class PageController {
   }
 
   _renderMostCommentedFilms() {
-    const mostCommentedMovies = getSotredArrayByFieldLength(this._filteredFilms, `comments`, MAX_SORTED_FILMS);
+    const mostCommentedMovies = getSotredArrayByFieldLength(this._films, `comments`, MAX_SORTED_FILMS);
     if (mostCommentedMovies.length === 0) {
       this._filmListComponent.hideMostCommentedBlock();
       return;
@@ -142,9 +153,11 @@ export default class PageController {
           this._films.findIndex((filmItem) => filmItem.id === oldFilmId),
           1,
           film);
+      this._moviesModel.setMovies(this._films);
+      this._filmsFiltered = this._moviesModel.getMovies();
+      this._filtersController.render();
       this._removeFilms();
-      this.render(this._films);
-      this._onFilterChange();
+      this.render();
     });
   }
 
@@ -153,9 +166,11 @@ export default class PageController {
   }
 
   _onFilterChange() {
-    this._filteredFilms = this._moviesModel.getMovies();
+    this._startBlock = 0;
+    this._endBlock = FILMS_COUNT_IN_BLOCK;
     this._removeFilms();
-    this.render();
+    this._filmsFiltered = this._moviesModel.getMovies();
     this._filtersController.render();
+    this.render();
   }
 }

@@ -17,4 +17,8 @@ export default class ProfileRating extends AbstractComponent {
   getTemplate() {
     return createProfileRatingTemplate(this._watchedFilmsCount);
   }
+
+  setWatchedFilmsCount(watchedFilmsCount) {
+    this._watchedFilmsCount = watchedFilmsCount;
+  }
 }

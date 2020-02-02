@@ -142,7 +142,7 @@ export default class MovieController {
     this._filmDetailsComponent.setRatingButtonClickHandler((evt) => {
       const newMovie = Movie.cloneMovie(film);
       newMovie.personalRating = Number(evt.target.value);
-      this._onRatingDataChange(film.id, newMovie);
+      this._onRatingDataChange(film.id, newMovie, film.personalRating);
     });
 
     if (film.isHistory) {
@@ -162,13 +162,13 @@ export default class MovieController {
     });
   }
 
-  _onRatingDataChange(oldFilmId, newFilm) {
+  _onRatingDataChange(oldFilmId, newFilm, oldPersonalRating) {
     this._filmDetailsComponent.disableRatingElement();
     this._api.updateMovie(oldFilmId, newFilm)
     .then((film) => {
       this._updateFilmDetails(oldFilmId, film);
       this._filmDetailsComponent.enableRatingElement();
-    }).catch(() => this._filmDetailsComponent.errorRatingSubmitHandler());
+    }).catch(() => this._filmDetailsComponent.errorRatingSubmitHandler(oldPersonalRating));
   }
 
   setDefaultView() {
