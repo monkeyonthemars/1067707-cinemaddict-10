@@ -6,8 +6,10 @@ import {getSotredArrayByFieldName, getSotredArrayByFieldLength} from '../utils/a
 
 import MovieController from './movie-controller.js';
 
-const FILMS_COUNT_IN_BLOCK = 5;
-const MAX_SORTED_FILMS = 2;
+const FILMS_COUNT = {
+  IN_BLOCK: 5,
+  MAX_SORTED: 2
+};
 
 export default class PageController {
   constructor(container, moviesModel, api, filtersController, filmListComponent) {
@@ -23,7 +25,7 @@ export default class PageController {
     this._films = this._moviesModel.getMovies();
     this._filmsFiltered = this._films;
     this._startBlock = 0;
-    this._endBlock = FILMS_COUNT_IN_BLOCK;
+    this._endBlock = FILMS_COUNT.IN_BLOCK;
 
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._sortComponent = new SortComponent();
@@ -109,7 +111,7 @@ export default class PageController {
 
   _renderFilmsBlock() {
     this._startBlock = this._endBlock;
-    this._endBlock += FILMS_COUNT_IN_BLOCK;
+    this._endBlock += FILMS_COUNT.IN_BLOCK;
     this._renderFilms(
         this._filmsListContainer,
         this._filmsFiltered.slice(this._startBlock, this._endBlock));
@@ -120,7 +122,7 @@ export default class PageController {
   }
 
   _renderTopRatedFilms() {
-    const topRatedMovies = getSotredArrayByFieldName(this._films, `totalRating`, MAX_SORTED_FILMS);
+    const topRatedMovies = getSotredArrayByFieldName(this._films, `totalRating`, FILMS_COUNT.MAX_SORTED);
     if (topRatedMovies.length === 0) {
       this._filmListComponent.hideTopRatedBlock();
       return;
@@ -131,7 +133,7 @@ export default class PageController {
   }
 
   _renderMostCommentedFilms() {
-    const mostCommentedMovies = getSotredArrayByFieldLength(this._films, `comments`, MAX_SORTED_FILMS);
+    const mostCommentedMovies = getSotredArrayByFieldLength(this._films, `comments`, FILMS_COUNT.MAX_SORTED);
     if (mostCommentedMovies.length === 0) {
       this._filmListComponent.hideMostCommentedBlock();
       return;
@@ -167,7 +169,7 @@ export default class PageController {
 
   _onFilterChange() {
     this._startBlock = 0;
-    this._endBlock = FILMS_COUNT_IN_BLOCK;
+    this._endBlock = FILMS_COUNT.IN_BLOCK;
     this._removeFilms();
     this._filmsFiltered = this._moviesModel.getMovies();
     this._filtersController.render();

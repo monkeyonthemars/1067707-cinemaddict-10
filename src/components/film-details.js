@@ -1,6 +1,12 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {formatDate, formatDuration, formatCommentDate, toISODate} from '../utils/date.js';
 
+const SHAKE_TIMEOUT = 600;
+const RATE = {
+  MAX: 9,
+  EMPTY: 0
+};
+
 const generateCommentsList = (comments) => {
   return comments
     .map((commentItem) => {
@@ -35,9 +41,6 @@ const generateGenresList = (genres) => {
 };
 
 const createFilmDetailsTemplate = (film, comments) => {
-  const MAX_RATE = 9;
-  const EMPTY_RATE = 0;
-
   const {
     title,
     alternativeTitle,
@@ -65,8 +68,8 @@ const createFilmDetailsTemplate = (film, comments) => {
   const watched = isHistory ? ` checked` : ``;
   const favorite = isFavorites ? ` checked` : ``;
 
-  const userRates = Array(MAX_RATE).fill(``);
-  if (personalRating !== EMPTY_RATE) {
+  const userRates = Array(RATE.MAX).fill(``);
+  if (personalRating !== RATE.EMPTY) {
     userRates.splice(personalRating - 1, 0, `checked`);
   }
 
@@ -359,7 +362,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   errorRatingSubmitHandler(oldPersonalRating) {
-    const SHAKE_TIMEOUT = 600;
     const ratingForm = this.getElement().querySelector(`.film-details__user-rating-score`);
     const ratingInputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
     const uncheckedRatingInputs = this.getElement().querySelectorAll(`input[name="score"]:not(:checked)`);
@@ -380,7 +382,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   errorCommentSubmitHandler() {
-    const SHAKE_TIMEOUT = 600;
     const commentForm = this.getElement().querySelector(`.film-details__new-comment`);
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     const uncheckedEmotionInputs = this.getElement().querySelectorAll(`input[name="comment-emoji"]:not(:checked)`);
